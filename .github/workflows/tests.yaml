@@ -1,0 +1,85 @@
+name: (Reusable) Tests
+on:
+  workflow_call:
+    inputs:
+      run_unit_tests:
+        description: "Unit tests are run if 'yes' and skipped otherwise."
+        type: boolean
+        required: false
+        default: false
+
+      run_physics_tests:
+        description: "Physics tests are run if 'yes' and skipped otherwise."
+        type: boolean
+        required: false
+        default: false
+
+jobs:
+
+  Unit-Tests:
+    if: ${{ inputs.run_unit_tests == true }}
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/ascot4fusion/ascot5deps:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.github_token }}
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install a5py
+        run: python3 -m pip install -e .
+
+      - uses: actions/download-artifact@main
+        with:
+          name: code
+
+      - name: Unpack
+        run: |
+          mkdir build
+          tar -xf code.tar -C ./build/
+
+      - name: Run
+        working-directory: ./a5py/testascot/
+        run: python3 unittests.py
+
+  Physics-Tests:
+    if: ${{ inputs.run_physics_tests == true }}
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/ascot4fusion/ascot5deps:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.github_token }}
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install a5py
+        run: python3 -m pip install -e .
+
+      - uses: actions/download-artifact@main
+        with:
+          name: code
+
+      - name: Unpack
+        run: |
+          mkdir build
+          tar -xf code.tar -C ./build/
+
+      - name: Run
+        working-directory: ./a5py/testascot/
+        run: python3 physicstests.py
+
+      - name: Upload failed test file
+        if: failure()
+        uses: actions/upload-artifact@main
+        with:
+          name: testascot
+          path: ./a5py/testascot/testascot.h5
+          retention-days: 1

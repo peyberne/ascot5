@@ -1,0 +1,25 @@
+name: Publish Documentation
+on:
+  push:
+    branches:
+      - docs
+
+jobs:
+
+  Prepare:
+    permissions:
+      contents: read
+      packages: write
+    uses: ascot4fusion/ascot5/.github/workflows/build.yaml@main
+
+  Docs:
+    needs: Prepare
+    permissions:
+      contents: read
+      packages: read
+      pages: write
+      id-token: write
+    uses: ascot4fusion/ascot5/.github/workflows/docs.yaml@main
+    with:
+      publish: true
+    secrets: inherit
