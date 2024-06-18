@@ -24,7 +24,7 @@
  * @param E electric field at the guiding center location
  * @param mhd_dmhd mhd perturbation information evaluated by mhd.c
  */
-#pragma omp declare simd
+DECLARE_TARGET_SIMD
 static void step_gceom_mhd(real* ydot, real* y, real mass, real charge,
                            real* B_dB, real* E, real* mhd_dmhd) {
 

@@ -49,7 +49,7 @@ void asigma_loc_free_offload(asigma_loc_offload_data* offload_data,
 void asigma_loc_init(asigma_loc_data* asgm_loc_data,
                      asigma_loc_offload_data* offload_data,
                      real* offload_array);
-#pragma omp declare simd uniform(asgm_loc_data)
+DECLARE_TARGET_SIMD_UNIFORM(asgm_loc_data)
 a5err asigma_loc_eval_sigma(real* sigma,
                             int z_1, int a_1,
                             int z_2, int a_2,
@@ -57,7 +57,7 @@ a5err asigma_loc_eval_sigma(real* sigma,
                             asigma_loc_data* asgm_loc_data,
                             real E_coll_per_amu,
                             int* enable_atomic);
-#pragma omp declare simd uniform(asgm_loc_data)
+DECLARE_TARGET_SIMD_UNIFORM(asgm_loc_data)
 a5err asigma_loc_eval_sigmav(real* sigmav,
                              int z_1, int a_1, real m_1,
                              int z_2, int a_2,

@@ -27,7 +27,7 @@
 
 #ifndef GPU
 #pragma omp declare target
-#pragma omp declare simd uniform(asigma)
+DECLARE_TARGET_SIMD_UNIFORM(asigma)
 #endif
 a5err atomic_rates(
     real* rate_eff_ion, real* rate_eff_rec, int z_1, int a_1, real m_1,
@@ -38,7 +38,7 @@ a5err atomic_rates(
 #pragma omp end declare target
 #endif
 #ifndef	GPU
-#pragma omp declare simd
+DECLARE_TARGET_SIMD
 #endif
 a5err atomic_react(
     int* q, real dt, real rate_eff_ion, real rate_eff_rec, int z_1, real rnd);
